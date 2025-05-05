@@ -2,14 +2,14 @@ from messages import message_color
 from colorama import Fore
 import numpy as np
 
-def hidden_propagation(normalized_patterns, wij, theta_j, input_layers, hidden_layers, num_patterns):
-    rj = np.zeros((num_patterns, hidden_layers))
-    sj = np.zeros((num_patterns, hidden_layers))
+def hidden_propagation(normalized_patterns, wij, theta_j, input_neurons, hidden_neurons, num_patterns):
+    rj = np.zeros((num_patterns, hidden_neurons))
+    sj = np.zeros((num_patterns, hidden_neurons))
     pattern_index = 0
     value_index = 0
 
-    for j in range(hidden_layers):
-        for i in range(input_layers):
+    for j in range(hidden_neurons):
+        for i in range(input_neurons):
             for pattern in normalized_patterns:
                 w_sum = 0
                 for value in pattern:
@@ -22,21 +22,21 @@ def hidden_propagation(normalized_patterns, wij, theta_j, input_layers, hidden_l
                 pattern_index += 1
             pattern_index = 0
 
-    message_color("PROPAGACIÓN - CAPA OCULTA (Rj)", Fore.CYAN)
-    print(rj)
-    message_color("PROPAGACIÓN - CAPA OCULTA (Sj)", Fore.CYAN)
-    print(sj)
+    # message_color("PROPAGACIÓN - CAPA OCULTA (Rj)", Fore.CYAN)
+    # print(rj)
+    # message_color("PROPAGACIÓN - CAPA OCULTA (Sj)", Fore.CYAN)
+    # print(sj)
 
     return rj, sj
 
-def output_propagation(sj, wjk, theta_k, hidden_layers, output_layers, num_patterns):
-    rk = np.zeros((num_patterns, output_layers))
-    sk = np.zeros((num_patterns, output_layers))
+def output_propagation(sj, wjk, theta_k, hidden_neurons, output_neurons, num_patterns):
+    rk = np.zeros((num_patterns, output_neurons))
+    sk = np.zeros((num_patterns, output_neurons))
     pattern_index = 0
     value_index = 0
 
-    for j in range(output_layers):
-        for i in range(hidden_layers):
+    for j in range(output_neurons):
+        for i in range(hidden_neurons):
             for pattern in sj:
                 w_sum = 0
                 for value in pattern:
@@ -49,9 +49,9 @@ def output_propagation(sj, wjk, theta_k, hidden_layers, output_layers, num_patte
                 pattern_index += 1
             pattern_index = 0
 
-    message_color("PROPAGACIÓN - CAPA SALIDA (Rk)", Fore.CYAN)
-    print(rk)
-    message_color("PROPAGACIÓN - CAPA SALIDA (Sk)", Fore.CYAN)
-    print(sk)
+    # message_color("PROPAGACIÓN - CAPA SALIDA (Rk)", Fore.CYAN)
+    # print(rk)
+    # message_color("PROPAGACIÓN - CAPA SALIDA (Sk)", Fore.CYAN)
+    # print(sk)
 
     return rk, sk
