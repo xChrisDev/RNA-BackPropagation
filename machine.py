@@ -80,7 +80,7 @@ class Machine:
                     theta_j,
                 )
                 epoch += 1
-        return jsonify({"message": f"Red entrenada con {epoch} epocas"}, "rms_history": Machine.rms_history), 200
+        return jsonify({"message": f"Red entrenada con {epoch} epocas", "rms_history": Machine.rms_history}), 200
 
     @staticmethod
     def predict(input_neurons, hidden_neurons, output_neurons, inputs):
