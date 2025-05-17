@@ -1,5 +1,3 @@
-from messages import message_color
-from colorama import Fore
 import pandas as pd
 import numpy as np
 

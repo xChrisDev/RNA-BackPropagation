@@ -1,7 +1,5 @@
 import numpy as np
 import pandas as pd
-from colorama import Fore
-from messages import message_color
 
 
 def adapt_weights(
@@ -70,26 +68,5 @@ def adapt_weights(
             delta_theta_j[j] = (niu * error_j[i][j]) + (alfa * temp_delta_theta_j[j])
             temp_delta_theta_j[j] = delta_theta_j[j]
             theta_j[j] += delta_theta_j[j]
-
-    # message_color("ERROR K", Fore.BLUE)
-    # print(error_k)
-    # message_color("WJK", Fore.BLUE)
-    # print(wjk)
-    # message_color("Δ WJK", Fore.BLUE)
-    # print(delta_wjk)
-    # message_color("θK", Fore.BLUE)
-    # print(theta_k)
-    # message_color("Δ θK", Fore.BLUE)
-    # print(delta_theta_k)
-    # message_color("ERROR J", Fore.GREEN)
-    # print(error_j)
-    # message_color("WIJ", Fore.GREEN)
-    # print(wij)
-    # message_color("Δ WIJ", Fore.GREEN)
-    # print(delta_wij)
-    # message_color("θJ", Fore.GREEN)
-    # print(theta_j)
-    # message_color("Δ θJ", Fore.GREEN)
-    # print(delta_theta_j)
-
+            
     return wij, wjk, theta_j, theta_k
