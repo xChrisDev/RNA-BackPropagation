@@ -26,7 +26,7 @@ class Machine:
         pd.DataFrame(training_patterns).to_csv(
             "data/training_patterns.csv", index=False, header=False, mode="w"
         )
-        normalized_patterns, num_patterns = normalize("data/training_patterns.csv")
+        normalized_patterns, num_patterns = normalize("data/training_patterns.csv", is_training=True)
         tk = pd.read_csv("data/target.csv", header=None, dtype=float).values
         epoch = 1
         is_training = True
@@ -79,22 +79,24 @@ class Machine:
                     theta_j,
                 )
                 epoch += 1
-                print(f"Is traingin in epoch: {epoch}")
+                print(f"Is training in epoch: {epoch} & RMS: {rms_obtained}")
         return {"message": f"Red entrenada con {epoch} epocas", "rms_history": Machine.rms_history}
 
     @staticmethod
     def predict(input_neurons, hidden_neurons, output_neurons, inputs):
         try:
+            print("Cargar inputs...")
             pd.DataFrame(inputs).to_csv(
                 "data/input_values.csv", index=False, header=False, mode="w"
             )
 
+            print("Normalizando...")
             wij, wjk, theta_j, theta_k = load()
-            normalized_patterns_input, num_patterns_input = normalize(
-                "data/input_values.csv"
-            )
+            normalized_patterns_input, num_patterns_input = normalize("data/input_values.csv", is_training=False)
+
             tk = pd.read_csv("data/target.csv", header=None, dtype=float).values
 
+            print("Valores de propagación...")
             sj = hidden_propagation(
                 normalized_patterns_input,
                 wij,
@@ -107,31 +109,28 @@ class Machine:
                 sj, wjk, theta_k, hidden_neurons, output_neurons, num_patterns_input
             )
 
+            print("Predicciones...")
             predictions = np.zeros((num_patterns_input, output_neurons))
             for j in range(num_patterns_input):
                 for i in range(output_neurons):
                     predictions[j][i] = 1 if sk[j][i] >= 0.5 else 0
 
-            acum = 0
-            result = ""
-            for i in range(num_patterns_input):
-                acum = 0
-                for j in range(output_neurons):
-                    if predictions[i][j] == tk[i][j]:
-                        acum += 1
-                if acum == output_neurons:
-                    match i:
-                        case 0:
-                            result = "A"
-                        case 1:
-                            result = "E"
-                        case 2:
-                            result = "I"
-                        case 3:
-                            result = "O"
-                        case 4:
-                            result = "U"
+            pred = predictions[0].tolist()
 
+            if pred == [0, 0, 1]:
+                result = "Vocal A"
+            elif pred == [0, 1, 0]:
+                result = "Vocal E"
+            elif pred == [1, 0, 0]:
+                result = "Vocal I"
+            elif pred == [1, 1, 0]:
+                result = "Vocal O"
+            elif pred == [1, 1, 1]:
+                result = "Vocal U"
+            else:
+                result = "Desconocido"
+
+            print(f"Prediction: {result} & values {pred}")
             return {"prediction": result}
 
         except Exception as e:

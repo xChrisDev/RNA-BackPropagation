@@ -1,47 +1,33 @@
 import numpy as np
 
 
-def hidden_propagation(
-    normalized_patterns, wij, theta_j, input_neurons, hidden_neurons, num_patterns
-):
+def hidden_propagation(normalized_patterns, wij, theta_j, input_neurons, hidden_neurons, num_patterns):
     rj = np.zeros((num_patterns, hidden_neurons))
     sj = np.zeros((num_patterns, hidden_neurons))
-    pattern_index = 0
-    value_index = 0
 
-    for j in range(hidden_neurons):
-        for i in range(input_neurons):
-            for pattern in normalized_patterns:
-                w_sum = 0
-                for value in pattern:
-                    w_sum += wij[value_index][j] * value
-                    value_index += 1
-                value_index = 0
-                w_sum += theta_j[j]
-                rj[pattern_index][j] = w_sum
-                sj[pattern_index][j] = 1 / (1 + np.exp(-rj[pattern_index][j]))
-                pattern_index += 1
-            pattern_index = 0
+    for p in range(num_patterns):  # Para cada patrón
+        for j in range(hidden_neurons):  # Para cada neurona oculta
+            suma = 0
+            for i in range(input_neurons):  # Para cada entrada
+                suma += normalized_patterns[p][i] * wij[i][j]
+            suma += theta_j[j]
+            rj[p][j] = suma
+            sj[p][j] = 1 / (1 + np.exp(-suma))
     return sj
+
 
 
 def output_propagation(sj, wjk, theta_k, hidden_neurons, output_neurons, num_patterns):
     rk = np.zeros((num_patterns, output_neurons))
     sk = np.zeros((num_patterns, output_neurons))
-    pattern_index = 0
-    value_index = 0
 
-    for j in range(output_neurons):
-        for i in range(hidden_neurons):
-            for pattern in sj:
-                w_sum = 0
-                for value in pattern:
-                    w_sum += wjk[value_index][j] * value
-                    value_index += 1
-                value_index = 0
-                w_sum += theta_k[j]
-                rk[pattern_index][j] = w_sum
-                sk[pattern_index][j] = 1 / (1 + np.exp(-rk[pattern_index][j]))
-                pattern_index += 1
-            pattern_index = 0
+    for p in range(num_patterns):  # Para cada patrón
+        for k in range(output_neurons):  # Para cada neurona de salida
+            suma = 0
+            for j in range(hidden_neurons):  # Para cada neurona oculta
+                suma += sj[p][j] * wjk[j][k]
+            suma += theta_k[k]
+            rk[p][k] = suma
+            sk[p][k] = 1 / (1 + np.exp(-suma)) 
     return sk
+
