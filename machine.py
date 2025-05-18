@@ -5,7 +5,6 @@ from weights import get_weights
 from normalize_patterns import normalize
 from back_propagation import adapt_weights
 from save_values import save, load
-from flask import jsonify
 
 
 class Machine:
@@ -80,7 +79,7 @@ class Machine:
                     theta_j,
                 )
                 epoch += 1
-        return jsonify({"message": f"Red entrenada con {epoch} epocas", "rms_history": Machine.rms_history}), 200
+        return {"message": f"Red entrenada con {epoch} epocas", "rms_history": Machine.rms_history}
 
     @staticmethod
     def predict(input_neurons, hidden_neurons, output_neurons, inputs):
@@ -132,15 +131,11 @@ class Machine:
                         case 4:
                             result = "U"
 
-            return jsonify({"prediction": result}), 200
+            return {"prediction": result}
 
         except Exception as e:
-            return jsonify(
-                {
-                    "error": "Debes entrenar la red primero o verificar que existan los archivos de pesos."
-                }
-            ), 400
+            return {"error": "Debes entrenar la red primero o verificar que existan los archivos de pesos."}
 
     @staticmethod
     def data_return():
-        return jsonify({"rms": Machine.rms_history}), 200
+        return {"rms": Machine.rms_history}
