@@ -79,6 +79,7 @@ class Machine:
                     theta_j,
                 )
                 epoch += 1
+                print(f"Is traingin in epoch: {epoch}")
         return {"message": f"Red entrenada con {epoch} epocas", "rms_history": Machine.rms_history}
 
     @staticmethod
@@ -134,7 +135,8 @@ class Machine:
             return {"prediction": result}
 
         except Exception as e:
-            return {"error": "Debes entrenar la red primero o verificar que existan los archivos de pesos."}
+            print(e)
+            return {"error": e}
 
     @staticmethod
     def data_return():

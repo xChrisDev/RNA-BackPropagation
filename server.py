@@ -7,18 +7,21 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], 
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+
 @app.get("/api/rms")
 def get_rms_historic():
     return Machine.data_return()
 
+
 @app.post("/api/train")
 def post_training(data: TrainRequest):
+    # return {"data": data}
     return Machine.learn(
         training_patterns=data.training_patterns,
         alfa=data.alfa,
@@ -32,8 +35,10 @@ def post_training(data: TrainRequest):
         rms=data.rms,
     )
 
+
 @app.post("/api/predict")
 def post_predict(data: PredictRequest):
+    # return data
     return Machine.predict(
         hidden_neurons=data.hidden_neurons,
         input_neurons=data.input_neurons,
