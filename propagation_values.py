@@ -12,10 +12,12 @@ def hidden_propagation(normalized_patterns, wij, theta_j, input_neurons, hidden_
                 suma += normalized_patterns[p][i] * wij[i][j]
             suma += theta_j[j]
             rj[p][j] = suma
-            sj[p][j] = 1 / (1 + np.exp(-suma))
+            sj[p][j] = sigmoid(suma)
     return sj
 
-
+def sigmoid(x):
+    x = np.clip(x, -500, 500)
+    return 1 / (1 + np.exp(-x))
 
 def output_propagation(sj, wjk, theta_k, hidden_neurons, output_neurons, num_patterns):
     rk = np.zeros((num_patterns, output_neurons))

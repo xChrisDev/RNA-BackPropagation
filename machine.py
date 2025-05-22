@@ -59,6 +59,8 @@ class Machine:
             rms_obtained = rms_obtained / (num_patterns * output_neurons)
             Machine.rms_history.append(rms_obtained)
 
+            print(f"Epoca: {epoch}, RMS: {rms_obtained}")
+
             if rms_obtained <= rms:
                 save(wij, wjk, theta_j, theta_k)
                 is_training = False
@@ -79,7 +81,6 @@ class Machine:
                     theta_j,
                 )
                 epoch += 1
-                print(f"Is training in epoch: {epoch} & RMS: {rms_obtained}")
         return {"message": f"Red entrenada con {epoch} epocas", "rms_history": Machine.rms_history}
 
     @staticmethod
@@ -93,8 +94,6 @@ class Machine:
             print("Normalizando...")
             wij, wjk, theta_j, theta_k = load()
             normalized_patterns_input, num_patterns_input = normalize("data/input_values.csv", is_training=False)
-
-            tk = pd.read_csv("data/target.csv", header=None, dtype=float).values
 
             print("Valores de propagación...")
             sj = hidden_propagation(
@@ -116,26 +115,30 @@ class Machine:
                     predictions[j][i] = 1 if sk[j][i] >= 0.5 else 0
 
             pred = predictions[0].tolist()
-
+            training_patterns = pd.read_csv("data/training_patterns.csv", header=None, dtype=float).values
             if pred == [0, 0, 1]:
-                result = "Vocal A"
+                result = training_patterns[0]
             elif pred == [0, 1, 0]:
-                result = "Vocal E"
+                result = training_patterns[1]
             elif pred == [1, 0, 0]:
-                result = "Vocal I"
+                result = training_patterns[2]
             elif pred == [1, 1, 0]:
-                result = "Vocal O"
+                result = training_patterns[3]
             elif pred == [1, 1, 1]:
-                result = "Vocal U"
+                result = training_patterns[4]
             else:
-                result = "Desconocido"
+                result = [0] * 784
+
+            if isinstance(result, np.ndarray):
+                result = result.reshape((28, 28)).tolist()
 
             print(f"Prediction: {result} & values {pred}")
-            return {"prediction": result}
+            return {"prediction": {"patternData": result}, "values": pred}
 
         except Exception as e:
             print(e)
-            return {"error": e}
+            return {"error": str(e)}
+
 
     @staticmethod
     def data_return():
